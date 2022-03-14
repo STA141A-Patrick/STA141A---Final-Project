@@ -1,0 +1,385 @@
+---
+title: "STA 141A Final Project"
+author: "Patrick Wittman, 914805087"
+date: "3/14/2022"
+output: html_document
+---
+
+# Comparing Vaccination Rates to the Strength of a Country's Economy
+
+### Introduction
+
+In today's age, one of the biggest indicators of a country's resources is the strength of their economy. A country's economy provides key insights that can be used to gauge the multitudes of factors that comprise a country as a whole. For example, it comes as no surprise that countries with a stronger economy thus have more money to dedicate to their healthcare system which then give rise to a healthier population as a result. Additionally, wealthier countries can provide more for their citizens, whether that be education, safety, and even medical supplies. However the global COVID-19 pandemic is not something that affects only wealthy countries, citizens from around the world are at risk to contracting and dying from this deadly disease. In this summary statistics report, the wealth of each country will be measured and compared to COVID-19 case and death rates. Furthermore, a country's wealth will be used to measure accessibility to the COVID-19 vaccine and whether or not economy plays a role in a population getting vaccinated. The questions of interest in this report are two fold: 
+
+1) Does the strength of a country's economy contribute to the vaccination status of its population?
+
+2) Do countries with a stronger economy exhibit lower COVID-19 case rates?
+
+As COVID-19 is a pandemic that has affected the entire world, it is imperative that medical resources are being devoted evenly, so that even less affluent countries can protect their population. By analyzing the trends in vaccine distribution and comparing it to the strength of a country's economy, medical resources can be better allocated in order to provide better accessibility to the COVID-19 vaccine. This data can further be used to show which countries have experienced sufficient vaccination status in order to reach herd immunity and which countries still need to receive vaccines. It is hypothesized that wealthier countries will have a higher percentage of COVID-19 vaccinations, as they can afford to purchase the vaccine and have the resources necessary for its distribution distribution. Poorer countries would be stricken with other issues such as malnutrition and access to clean food and water, leading to an unhealthier population overall. By finding a correlation between a country's economic strength and the COVID-19 death rates, it will be shown the inequalities between richer and poorer countries. Tackling the discrepancies between countries in terms of access to adequate healthcare is the first step to preventing COVID-19 deaths.
+
+In this report, the strength of a country's economy will be measured through GDP per capita, which is the value created through the goods and services created divided by its total population. GDP per capita takes into account the population of a country, as countries with higher populations typically have a higher GDP due to having a bigger work force. Wealthier countries will thus have a higher GDP per capita, or more money created per citizen. Another factor being looked at is the amount of vaccinations administered, or how many doses of vaccines that a country is able to provide for its population. Both of these variables will be cross checked with the country of origin from where this data originated from and the continent that the country is located on. As some continents are thought of as being poorer than others, this will be a good baseline to divide the "First" and "Third" world countries. All of this data was provided by "Our World in Data", a scientific publication dedicated to providing data sets on key issues in the world.
+
+Another key data set that will be looked at was provided by the "World Health Organization", or "WHO". WHO is a international agency founded by the UN that deals with health issues that affect the whole world, and the data set that has to explicitly deal with COVID-19 case and death rates comes from their research terms. From this data set, the total COVID-19 case and death rates will be analyzed, along with the country in which this data comes from and the data in which the data was recorded. The COVID-19 mortality rate will also be looked at, which is found through comparing COVID-19 cases to COVID-19 deaths.
+
+### Background
+
+In December of 2019 the first recorded case of the COVID-19 was reported in Wuhan, China. Characterized by flu-like symptoms, COVID-19 was able to spread rapidly regardless of age and occupation. Since then, the disease has been a global pandemic that has hit every country in the world and has led to millions of deaths worldwide. Daily life has been thrown upside down, with economies tanking in monetary value, people losing their sources of income, and supply lines for basic goods being disrupted. The COVID-19 pandemic is unique in that it can be spread through asymptomatic individuals who remain unaffected yet are able to infect those who are more at risk to the disease. As a response to this, many countries had to close themselves off and enter a period of lockdown, preventing their citizens from leaving their house to go to school, work, and even get groceries. This measure was necessary in order to prevent the disease from spreading and overwhelming the healthcare systems of countries. However, a year later in December of 2020 a vaccine was developed, that minimized the effects of COVID-19 and its transmission. More than a year since then the vaccine has been heavily distributed, with billions of doses having been administered to people across the world. Despite this concentrated effort at protecting people from COVID-19, there are still plenty of countries that lack access to this vaccine and whose citizens lack immunity. It is hypothesized that the defining factor between countries that have access to the vaccine and those who don't is wealth, with wealthier countries having the resources required to vaccinate their population.
+
+Research has shown that quality of healthcare is largely tied to the funding that that healthcare systems receive, both in terms of resources that hospitals have and skilled doctors available. It is with no surprise that wealthier countries would have more money to fund their own healthcare systems and thus would have better quality systems as a result. One element that should be looked at however is availability of COVID-19 vaccines, as in many countries receiving the vaccine is a cost covered by the government. By comparing the strength of a country's economy to the amount of vaccinations that is able to give to its citizens, trends will be able to be analyzed that can show where and why some countries lack access to COVID-19 vaccines. If an adequate trend is discovered, further funding can then be sponsored by wealthier nations, in order to vaccinate those in less wealthier parts of the world.
+
+The first data set used in this report comes from "Our World in Data", an online scientific publication which provided key data sets having to do with a multitude of factors affecting the spread and lethality of COVID-19. From this data set, two key variables were analyzed, the GDP per capita of each country and the amount of vaccines administered by said country. GDP per capita was chosen as it is a good indicator into the strength of an economy, showing how much economic output each citizen of that country produces. The amount of vaccines administered was also chosen in order to measure the accessibility of the vaccine, or how many doses that a country is able to obtain for its population. Additionally, the amount of people fully vaccinated against COVID-19 was looked at and compared to the population, in order to get the percentage of people fully vaccinated. This data was obtained through dedicated sampling by the governments in question to the World Health Organization. Each dose of vaccine that was administered was recorded for the day per country, and was then logged. The target audience of this data were the citizens of the country in which they resided in, with the amount of COVID-19 vaccine doses that were administered being tracked.
+
+The second data set is provided by the "World Health Organization", or WHO for short. The data provided has to do with the total COVID-19 case and death rates per country, which was sampled by the research teams employed by WHO. COVID-19 case rates refer to every reported case of COVID-19 in the country while death rates have to deal with every reported death. As the World Health Organization is an international body, it is funded by countries all over the world. The target population in this data are the citizens of the world, as WHO has collected the COVID-19 case and death rates for every country in which there is data available for. As some countries are more remote however, there are some holes in the data collection, in that not all dates provide the same data. In this, I have opted to use the most recent data for each country, to provide the most accurate measurements for March of 2022.
+
+
+### Descriptive Analysis
+
+```{r data, warning=FALSE, message=FALSE, echo=FALSE}
+
+# Loading the libraries necessary for data analysis and loading the data being used into R
+
+library(tidyverse)
+library(gridExtra)
+library(scales)
+library(lubridate)
+library(ggplot2)
+library(plotly)
+
+vaccination_rates_GDP <- read_csv("Vaccination Data.csv")
+covid_data <- read_csv("https://covid19.who.int/WHO-COVID-19-global-data.csv")
+
+```
+
+```{r data2, echo=FALSE, message=FALSE}
+
+#Selecting the data from the data set of the vaccination rates and GDP
+
+GDP <- vaccination_rates_GDP %>% select(continent, location, date, gdp_per_capita)
+GDP2022 <- filter(GDP, date == "1/1/2022")
+GDP2022 <- GDP2022 %>% select(continent, location, gdp_per_capita)
+GDP2022 <- na.omit(GDP2022)
+
+vaccines <- vaccination_rates_GDP %>% select(continent, location, date, total_vaccinations, people_vaccinated, people_fully_vaccinated, new_vaccinations)
+vaccines2022 <- filter(vaccines, total_vaccinations > 1000 & people_fully_vaccinated > 1000)
+vaccines2022 <- vaccines2022 %>% group_by(location, continent) %>% summarize(max.total_vaccinations = max(total_vaccinations))
+vaccines2022 <- na.omit(vaccines2022)
+
+
+```
+
+```{r data3}
+
+# Doing a summary of the data for the GDP per capita of each country
+
+dim(GDP2022)
+head(GDP2022)
+sd(GDP2022$gdp_per_capita)
+summary(GDP2022$gdp_per_capita)
+
+```
+
+In order to accurately measure if GDP per capita leads to an increase in vaccination status, a summary report was conducted on the GDP of every country in the world. As stated, GDP per capita measures the gross domestic product (GDP) per citizen of that country. In this, the quantiles for GDP per capita for each country were measured along with the mean and standard deviation. A big insight into this is how much the GDP per capita differs between countries, with the median country having less than half a GDP per capita of the countries in the third quantile.
+
+```{r data3.1}
+
+# Doing a summary of the data for the number of vaccinations administered per country
+
+dim(vaccines2022)
+head(vaccines2022)
+sd(vaccines2022$max.total_vaccinations)
+summary(vaccines2022$max.total_vaccinations)
+
+
+```
+
+The next data that was measured was the total amount of vaccinations that was administered to a country's population. The quantiles for this data were also generated along with the mean and standard deviation. It can be seen that some countries have received a huge quantity of vaccination doses compared to others, with the median allocated doses being 3.313e+06 doses.
+
+```{r data4, echo=FALSE, warning=FALSE}
+
+# Graphing the GDP per capita of each country and the doses of vaccines administered, per country per continent
+
+worldGDP.boxplot <- ggplot(GDP2022, aes(x=continent, y=gdp_per_capita)) + geom_boxplot() + labs(y= "GDP per capita per Country", x= "Continent") + ggtitle("The GDP per Capita of each Country per Continent")
+ggplotly(worldGDP.boxplot)
+
+worldvaccines.boxplot <- ggplot(vaccines2022, aes(x=continent, y=max.total_vaccinations)) + geom_boxplot() + scale_y_continuous(limits = c(0, 2.5e+08)) + labs(x= "Continent", y= "Total  Vaccinations  Administered  in  Doses") + ggtitle("The Doses of Vaccines Administered by Continent")
+ggplotly(worldvaccines.boxplot)
+```
+
+The next step was to compare both the GDP per capita and vaccination dosages to each country in the same continent. Continents such as Asia, Europe, and North America are typically considered wealthier, which can be seen in the GDP per capita box plot above. On average, countries from these continents have a higher GDP per capita and thus generate more economic output than countries found in Africa, Oceania, or South America. When looking at the average vaccination doses per country in each continent as well, a similiar trend can be observed. The wealthier continents of Asia, Europe, and North America typically have more vaccination doses. An outlier is seen in South America, a continent with a lower average GDP per capita yet with comparable vaccination status to Asia and more than Europe and North America.
+
+```{r data4.1, echo=FALSE, message=FALSE}
+
+# Combining both the WHO COVID-19 data and data about GDP/vaccine doses administered, this is to show a trend between the two data sets
+
+covid <- covid_data
+names(covid) [3] <- "location"
+NonAvg.vaccines.gdp2022 <- merge(GDP2022, vaccines2022, by="location")
+NonAvg.vaccines.gdp2022 <- NonAvg.vaccines.gdp2022 %>% select (location, continent.x, gdp_per_capita, max.total_vaccinations)
+names(NonAvg.vaccines.gdp2022) [2] <- "continent"
+covid <- merge(covid, NonAvg.vaccines.gdp2022, by="location")
+covid.cases <- covid %>% group_by(location, continent, gdp_per_capita, max.total_vaccinations) %>% summarise(total.cases = max(Cumulative_cases))
+covid.deaths <- covid %>% group_by(location, continent, gdp_per_capita, max.total_vaccinations) %>% summarise(total.deaths = max(Cumulative_deaths))
+
+```
+
+```{r data4.2}
+
+# Doing a summary for both the total amount of COVID-19 cases and deaths per country, also showing the amount of total vaccinations and GDP per capita of each country
+
+head(covid.cases)
+head(covid.deaths)
+
+summary(covid.cases$total.cases)
+summary(covid.deaths$total.deaths)
+
+```
+
+Now the total COVID-19 cases and death rate must be summarized, with the quantiles for both the total number of COVID-19 cases and deaths being observed. In this, the mean and median cases and deaths per country were summarized and logged.
+
+```{r data4.3, echo=FALSE, message=FALSE, warning=FALSE}
+
+# Setting the average COVID-19 cases and deaths by continent, and graphing the total number of cases and deaths
+
+mean.covid.cases <- covid.cases %>% group_by(continent) %>% summarise(mean.total.cases = mean(total.cases), mean.GDP = mean(gdp_per_capita))
+mean.covid.deaths <- covid.deaths %>% group_by(continent) %>% summarise(mean.total.deaths = mean(total.deaths), mean.GDP = mean(gdp_per_capita))
+
+worldcases.boxplot <- ggplot(covid.cases, aes(x=continent, y=total.cases)) + geom_boxplot() + labs(y= "Number of Reported COVID-19 Cases", x= "Continent") + ggtitle("Reported Cases of COVID-19 by Continent") + scale_y_continuous(limits=c(0, 7e+05))
+ggplotly(worldcases.boxplot)
+
+worlddeaths.boxplot <- ggplot(covid.deaths, aes(x=continent, y=total.deaths)) + geom_boxplot() + labs(x= "Continent", y= "Number of Reported COVID-19 Deaths") + ggtitle("Reported Deaths from COVID-19 by Continent")
+ggplotly(worlddeaths.boxplot)
+
+```
+
+The next piece of data that had to be looked at were the COVID-19 case and death rates per continent and per country, in order to see if some continents had higher incidences of COVID-19 than others. By sorting by continent as well, it provided a good first look towards vaccination status; if continents with higher incidences of COVID-19 also had lower vaccination administered vaccinations. It is seen that Asia, Europe, and South America all have higher reported cases of COVID-19, especially when compared to Africa, North America, and Oceania. Two factors can be used to explain this trend, higher populations and better healthcare services that can file these reports. It can be taken into account that some poorer countries lack the resources required to treat COVID-19 patients and thus can't report cases. Higher populations too could be a factor, as bigger populations would lead to more cases of COVID-19. However, when looking at the death rates for COVID-19, it is seen that South America had the highest incidences of reported deaths. Even when factoring in reported cases, South America on average had double the reported deaths per country than countries in Asia and Europe. This is an insightful first look in how the economy of a country plays a role into treatment for COVID-19. 
+
+```{r data5, echo=FALSE, message=FALSE}
+
+# Setting the data to show the mean GDP per capita and the mean number of vaccines adminstered per continent
+
+mean.GDP2022 <- GDP2022 %>% group_by(continent) %>% summarise(mean.gdp_per_capita = mean(gdp_per_capita))
+mean.GDP2022 <- na.omit(mean.GDP2022)
+
+
+mean.vaccines2022 <- vaccines2022 %>% group_by(continent) %>% summarise(mean.total_vaccinations = mean(max.total_vaccinations))
+mean.vaccines2022 <- na.omit(mean.vaccines2022)
+
+```
+
+```{r data6, echo=FALSE}
+
+# Graphing the mean GDP per capita of each continent and the average doses of vaccines given
+
+worldMeanGDP.barplot <- ggplot(mean.GDP2022, aes(x=continent, y=mean.gdp_per_capita)) + geom_bar(stat="identity") + labs(y= "Mean GDP per capita", x= "Continent") + ggtitle("The Mean GDP per Capita of Each Continent")
+ggplotly(worldMeanGDP.barplot)
+
+worldMeanvaccines.barplot <- ggplot(mean.vaccines2022, aes(x=continent, y=mean.total_vaccinations)) + geom_bar(stat="identity") + labs(x= "Continent", y= "Average  Total  Vaccinations  Administered  in  Doses") + ggtitle("The Average Doses of Vaccines Administered by Continent")
+ggplotly(worldMeanvaccines.barplot)
+
+```
+
+Another key piece of data was to average out the GDP per capita and amount of vaccines administered by continent, as even though some continents are considered wealthier or poorer, not all countries in that continent are of the same socioeconomic status. By averaging out the GDP per capita and vaccination dosages, these trends can be analyzed as a whole rather than focusing on individual outliers in the data. From this, it can be seen that Asia, Europe, and North America are the wealthiest continents as a whole, typically comprising what is known as the "first world". Likewise, the "third world" continents such as Africa, Oceania, and South America have a lower GDP per capita. However, on first glance it seems as if Asian countries received on average a higher number of total COVID-19 vaccinations, especially when compared to similiar wealthier continents such as Europe and North America. Another outleir is seen in South America, having received a fair amount of COVID-19 vaccinations as well despite its lower economic status.
+
+```{r data2.1, echo=FALSE, message=FALSE}
+
+# Showing the COVID-19 mortality rate to show how many people are getting infected with COVID-19 and if they survive
+
+
+covid_data2 <- covid_data %>% rowwise() %>% mutate(mortality.rate = 100*(Cumulative_deaths/Cumulative_cases))
+covid_data2 <- filter(covid_data2, mortality.rate < 25)
+covid_data2 <- na.omit(covid_data2)
+
+covid.mortality.linegraph <- ggplot(covid_data2, aes(x=Date_reported, y=mortality.rate, text=Country)) + geom_line(color="light blue") + theme(legend.position="none") + labs(x= "Date", y= "COVID-19 Mortality Rate") + ggtitle("COVID-19 Mortality Rate by Country")
+ggplotly(covid.mortality.linegraph)
+
+```
+
+The COVID-19 mortality rate was also analyzed, this was generated by dividing the total number of COVID-19 cases by the total number of COVID-19 deaths. This data was reported alongside the reported date, in order to show the mortality rate of COVID-19 over a perioid of time. As it can be seen, some countries such as Yemen reported a higher at around a 25% mortality rate when compared to the rest of the world. This can probably be attributed to the ongoing civil war in Yemen, which prevents access to both vaccines and adequate health care services. As shown by the graph, the standard mortality rate for COVID-19 rests at a an average of around 5%. This means that around 5% of the reported cases of COVID-19 end up in deaths. This number may sound huge, but a key word in all of this is "reported". Not all COVID-19 cases go reported, with many people who contract the disease showing no symptoms and thus being asymptomatic.
+
+### Inferential Anaylsis
+
+```{r data7, echo=FALSE, message=FALSE, results='hide'}
+
+# Doing proportionality; showing what percent of people are vaccinated per country
+
+proportion.vaccination <-  vaccination_rates_GDP %>% select(continent, location, date, gdp_per_capita, people_vaccinated, population)
+proportion.vaccination <- na.omit(proportion.vaccination)
+proportion.vaccination <- filter(proportion.vaccination, people_vaccinated > 0)
+proportion.vaccination <- proportion.vaccination %>% group_by(location, continent, gdp_per_capita, population) %>% summarise(max.people_vaccinated = max(people_vaccinated))
+proportion.vaccination <- proportion.vaccination %>% rowwise() %>% mutate(populationpercent.vaccinated = (max.people_vaccinated/population))
+
+```
+
+The model that was used to test the question of interest was an ANOVA model, both a one-way and two-way model for each of the questions being analyzed. An ANOVA model was chosen as it provides an excellent response variable in regards to factor levels, such as the ones that we will be analyzing in this statistical report. The ANOVA model is able to show a trend in the response variable when accounting for the various factors being accounted for and can explain whether the trend is due to chance or from the factors themselves. There are certain assumptions that must hold true in the ANOVA model, these assumptions being that each of the error terms in the model are normally distributed, each of the response variables are independent of one another, and that the variance between response variables have an equal variance.
+
+```{r data10, echo=FALSE, results='hide'}
+
+# One way ANOVA model, linking the GDP per capita of each continent to the number of vaccines given. Had to create the data set as the previous one was the average and not the total
+
+NonAvgvaccines.GDP2022 <- vaccination_rates_GDP %>% select(continent, location, date, gdp_per_capita, total_vaccinations)
+NonAvgvaccines.GDP2022 <- na.omit(NonAvgvaccines.GDP2022)
+NonAvgvaccines.GDP2022 %>% select(continent, location, date, gdp_per_capita, total_vaccinations)
+NonAvgvaccines.GDP2022 <- NonAvgvaccines.GDP2022 %>% group_by(location, continent, gdp_per_capita) %>% summarise(max.total_vaccinations = max(total_vaccinations))
+
+```
+
+```{r data10.1}
+
+# One way ANOVA model, linking the GDP per capita of each continent to the number of vaccines given
+
+GDP.vaccines.model <- aov(max.total_vaccinations~gdp_per_capita,data = NonAvgvaccines.GDP2022)
+summary(GDP.vaccines.model)
+GDP.vaccines.model$coefficients
+```
+
+The first model that was created was a one way ANOVA model, that had to do with linking the GDP per capita of each country to the number of vaccinations given. This one way ANOVA model was defined as $Y_{i,j}$ =μ.. +$ϵ_{i,j}$. With $Y_{i,j}$ referring to the GDP per capita for each ith country and jth amount of doses of vaccines. The mean term μ refers to the average GDP per capita given per country while $ϵ_{i,j}$ refers to the error terms that can not be explained by the mean. From this ANOVA model, it can be seen that there is only a slight trend between GDP per capita and the amount of vaccines given, as shown by the low F test statistic and high P value. At an alpha level of 0.05, our P value fails to reject the null hypothesis that GDP per capita leads to an increase in the amount of vaccination dosages received. From this, it can be seen that using the total number of vaccination doses was not to the correct approach in order to link the strength of an economy to COVID-19 vaccination status.
+
+```{r data11, echo=FALSE}
+
+# One way ANOVA model, linking the GDP per capita to the proportion of the population vaccinated to COVID-19 
+
+GDP.proportionalvaccines.model <- aov(populationpercent.vaccinated~gdp_per_capita, data=proportion.vaccination)
+summary(GDP.proportionalvaccines.model)
+
+```
+
+As the first model obtained results that weren't statistically significant, a new model had to be created. This next model was another one way ANOVA model, that had to do with linking the GDP per capita of each country to the proportion of the population vaccinated against COVID-19. Proportion of vaccination status was analyzed as it was seen that countries with a higher population would have a higher amount of administered vaccines, regardless of GDP per capita. This new one way ANOVA model was defined as $Y_{i,j}$ =μ.. +$ϵ_{i,j}$. With $Y_{i,j}$ referring to the GDP per capita for each ith country and jth proportion of the population vaccinated. The mean term μ refers to the average GDP per capita per country while $ϵ_{i,j}$ refers to the error terms that can not be explained by the mean. The results from this test were statistically significant however, showing a trend between GDP per capita and the proportion of a population being vaccinated. With a high F statistic and a low P value at 2e-16, it can be assumed that there is a relationship between GDP and vaccination status.
+
+```{r data11.1, echo=FALSE}
+
+# Two way ANOVA model, linking GDP per capita and proportion of the population vaccinated to COVID-19 cases, had to create the data set to be used
+
+covid.proportion.cases <- merge(covid.cases, proportion.vaccination, by= "location")
+covid.proportion.cases <- covid.proportion.cases %>% select(location, continent.x, gdp_per_capita.x, max.total_vaccinations, total.cases, populationpercent.vaccinated)
+
+```
+
+```{r data12}
+
+# Two way ANOVA model, linking GDP per capita and proportion of the population vaccinated to COVID-19 cases
+
+GDP.cases.model <- aov(total.cases~gdp_per_capita.x+populationpercent.vaccinated, data=covid.proportion.cases)
+summary(GDP.cases.model)
+
+```
+
+As the one way ANOVA model with GDP per capita to proportion of the population vaccinated to COVID-19 was a success, a secondary ANOVA model was also created. This ANOVA model was a two-way model, using both the GDP per capita of each country along with the proportion of the population vaccinated to COVID-19. The notation for this model was $Y_{i,j,k}$ =μ..+ $α_i$ + $β_j$+$ϵ_{i,j,k}$, with $Y_{i,j,k}$ referring to the total amount of COVID-19 cases for ith GDP per capita, jth proportion of the population vaccinated, and kth combination of GDP per capita and vaccination proportion. The mean term μ refers to the average COVID-19 cases for all countries, while $α_i$ refers to the GDP per capita. The next term $β_j$ refers to the proportion of the population vaccinated against COVID-19 while $ϵ_{i,j,k}$ is the error term generated by GDP per capita, vaccination proportion, and the combination of those two variables. From this model, it can be seen that only the proportion of the population vaccinated against COVID-19 was a meaningful model and that GDP per capita was of little effect. This can be seen with the low F test statistic values for GDP per capita when compared to the proportion of the population vaccinated. Additionally, the factor level for proportion of the population that is vaccinated had a much lower p value than the factor level for GDP per capita.
+
+```{r data12.1, echo=FALSE}
+
+# Two way ANOVA model, linking GDP per capita and proportion of the population vaccinated to COVID-19 to COVID-19 deaths, had to create the data set to be used
+
+covid.proportion.deaths <- merge(covid.deaths, proportion.vaccination, by= "location")
+covid.proportion.deaths <- covid.proportion.deaths %>% select(location, continent.x, gdp_per_capita.x, max.total_vaccinations, total.deaths, populationpercent.vaccinated)
+
+```
+
+```{r data13}
+
+# Two way ANOVA model, linking GDP per capita and proportion of the population vaccinated to COVID-19 to COVID-19 deaths
+
+GDP.deaths.model <- aov(total.deaths~gdp_per_capita.x+populationpercent.vaccinated, data=covid.proportion.deaths)
+summary(GDP.deaths.model)
+
+```
+
+A final ANOVA model was also created, using both the GDP per capita of each country along with the proportion of the population vaccinated to COVID-19 but this time cross checked with the total deaths. Deaths due to COVID-19 was measured to compare to the total cases of the disease. The notation for this model was $Y_{i,j,k}$ =μ..+ $α_i$ + $β_j$+$ϵ_{i,j,k}$, with $Y_{i,j,k}$ referring to the total amount of COVID-19 deaths for ith GDP per capita, jth proportion of the population vaccinated, and kth combination of GDP per capita and vaccination proportion. The mean term μ refers to the average COVID-19 deaths for all countries, while $α_i$ refers to the GDP per capita. The next term $β_j$ refers to the proportion of the population vaccinated against COVID-19 while $ϵ_{i,j,k}$ is the error term generated by GDP per capita, vaccination proportion, and the combination of those two variables. Like the previous model, it was also shown that only proportion of the population vaccinated against COVID-19 was a meaningful variable and that GDP per capita did not affect COVID-19 death rates to a meaningful extent. This can be seen with the low F test statistic values for GDP per capita when compared to the proportion of the population vaccinated. The factor level for proportion of the population that is vaccinated also had a much lower p value than the factor level for GDP per capita. From this, it can be seen that there is more than just GDP per capita being at play for the total COVID-19 case rates, and moving forward some other economic factors should be taken into consideration.
+
+```{r data7.1, echo=FALSE}
+
+# Showing the average number of vaccine doses given to people per continent, accounting for GDP per capita
+
+vaccines.GDP2022 <- vaccination_rates_GDP %>% select(continent, location, date, gdp_per_capita, total_vaccinations)
+vaccines.GDP2022 <- na.omit(vaccines.GDP2022)
+vaccines.GDP2022 <- vaccines.GDP2022 %>% group_by(location, continent, gdp_per_capita) %>% summarise(max.total_vaccinations = max(total_vaccinations))
+vaccines.GDP2022 <- vaccines.GDP2022 %>% group_by(continent) %>% summarise(mean.total_vaccinations = mean(max.total_vaccinations), mean.GDP = mean(gdp_per_capita))
+
+worldGDPvaccines.barplot <- ggplot(vaccines.GDP2022, aes(x=mean.GDP, y=mean.total_vaccinations, fill=continent)) + geom_bar(stat="identity") + labs(y= "Average Vaccinations Doses By Continent", x= "Average GDP per Capita of Continent") + ggtitle("Average Vaccination Doses by Average GDP per Capita by Continent") + theme_minimal()
+ggplotly(worldGDPvaccines.barplot)
+
+```
+
+In order to display the trend between GDP per capita and the amount of vaccine doses that were administered, a graph was created showcasing those two variables. This was sorted out by continent, in order to show the disparity between the first and third world countries. As seen on the graph, Asia had received the most amount of COVID-19 vaccines while also displaying one of the highest GDPs. However, the two other highest GDP continents, being Europe and North America had received less vaccine dosages than South America, which on average had a lower GDP per capita. From this data, it can be seen that looking at the total amount of dosages may not be the correct approach, and looking at vaccination percentage per population is the better method moving forward.
+
+```{r data8, echo=FALSE, warning=FALSE, message=FALSE}
+
+# Graphing proportionality and linking it to GDP per capita; showing what percent of people are vaccinated per country
+
+
+worldGDP.proportionalvaccines.scatterplot <- ggplot(proportion.vaccination, aes(x=gdp_per_capita, y=populationpercent.vaccinated, fill=continent, text=location)) + geom_point(stat="identity") + labs(y= "Percent of Population Vaccinated", x= "GDP per Capita of Country") + ggtitle("Proportion of Population Vaccinated by GDP per Continent")
+ggplotly(worldGDP.proportionalvaccines.scatterplot)
+
+worldGDP.proportionalvaccines2.scatterplot <- ggplot(proportion.vaccination, aes(x=gdp_per_capita, y=populationpercent.vaccinated, fill=continent)) + geom_point(stat="identity") + labs(y= "Percent of Population Vaccinated", x= "GDP per Capita of Country") + ggtitle("Linear Regression of Population Vaccinated by GDP per Continent") + geom_smooth(method=lm)
+ggplotly(worldGDP.proportionalvaccines2.scatterplot)
+
+```
+
+As was revealed earlier, a better aspect to look at was proportion of the population vaccinated to COVID-19 and cross checking that to GDP per capita. This was done for each country, with the GDP per capita being observed along with the proportion of the population vaccinated for COVID-19. In this a linear regression can be seen, which further supports the one-way ANOVA model that was previously created. From this linear regression, is is seen that an increase in GDP per capita also leads to an increase in the proportion of the population vaccinated against COVID-19. This further supports the first question of interest, in that stronger economies do have more access to the COVID-19 vaccine and can thus vaccinate their population.
+
+```{r data9, echo=FALSE, warning=FALSE, message=FALSE}
+
+# Linking COVID-19 cases and deaths to GDP per capita by continent
+
+covidcases.scatterplot <- ggplot(covid.cases, aes(x=gdp_per_capita, y=total.cases, fill=continent)) + geom_boxplot() + labs(y= "Reported COVID-19 Cases", x= "GDP per Capita of Country") + ggtitle("Cases of COVID-19 by GDP per Capita of Continent") + scale_y_continuous(limits = c(0, 3e+07))
+covidcases.scatterplot
+
+coviddeaths.scatterplot <- ggplot(covid.deaths, aes(x=gdp_per_capita, y=total.deaths, fill=continent)) + geom_boxplot() + labs(y= "Reported COVID-19 Deaths", x= "GDP per Capita of Country") + ggtitle("Deaths by COVID-19 by GDP per Capita of Continent") + scale_y_continuous(limits = c(0, 3e+05))
+coviddeaths.scatterplot
+
+```
+
+The number of COVID-19 cases and deaths had to also be analyzed, per continent, in order to show any trends between countries in said continent. Both the COVID-19 cases and deaths were cross linked to the GDP per capita average of each continent, with the case and death rate being compared across countries. One unexpected result was how the lower GDP countries had both less COVID-19 cases and deaths, which was a surprising result. This could be attributed to these countries not having the healthcare facilities to take care of COVID-19 patients, thus showing gaps in their data collection. These countries could still be suffering from COVID-19 but lack the resources to keep an adequate record of both cases and deaths. Going off of this data alone however, it would seem that countries with weaker economies do not have higher COVID-19 case rates. Though it can be inferred that this data is incorrect due to lack of data collection protocols.
+
+```{r data14, echo=FALSE, warning=FALSE, message=FALSE}
+
+# Linking COVID-19 cases and deaths to both GDP and percent of people vaccinated
+
+covidcases2.scatterplot <- ggplot(covid.proportion.cases, aes(x=populationpercent.vaccinated, y=total.cases, fill=gdp_per_capita.x, alpha=0.01)) + geom_point() + labs(y= "Total Number of Reported COVID-19 Cases", x= "Percentage of the Population Vaccinated") + ggtitle("Cases of COVID-19 to Percentage of the Population Vaccinated, by GDP per capita") + geom_smooth(method=lm)
+ggplotly(covidcases2.scatterplot)
+
+coviddeaths2.scatterplot <- ggplot(covid.proportion.deaths, aes(x=populationpercent.vaccinated, y=total.deaths, fill=gdp_per_capita.x, alpha=0.01)) + geom_point() + labs(y= "Total Number of Reported COVID-19 Deaths", x= "Percentage of the Population Vaccinated") + ggtitle("Deaths of COVID-19 to Percentage of the Population Vaccinated, by GDP per capita") + geom_smooth(method=lm)
+ggplotly(coviddeaths2.scatterplot)
+
+```
+
+The last graphical model that was created had to do with linking COVID-19 case and death rates to both proportion of the population that is vaccinated and the GDP per capita of said countries. A linear regression was also created in order to show the relationship between all of these variables. As supported by the two previous two-way ANOVA models, there does seem to be some sort of linear relationship between the proportion of the population vaccinated and COVID-19 case and death rates when compared to the GDP per capita of each country. However this relationship is very surface level and there could be more factors at play that affect it as a whole. In this, there seems to be minimal evidence towards the second question of interest in that stronger economies having less COVID-19 case and death rates.
+
+### Sensitivity Anaylsis
+
+```{r data15, echo=FALSE}
+
+# Sensitivity Analysis for the one-way ANOVA model for accessibility to the COVID-19 vaccine and GDP per capita of a country
+
+plot(GDP.proportionalvaccines.model)
+
+```
+
+A sensitivity analysis was then conducted on the model of GDP per capita to the proportion of the population vaccinated to COVID-19. This was done in order to test the assumptions that were being made about the ANOVA model and to see if they hold true. The first graph is a residuals vs fitted graph that shows non-linear relationships between data. In this, it can be seen that the values between the proportion of the population vaccinated and the GDP per capita follows a parabolic curve, which is non-linear. The next graph is a QQ plot, which tests the normality assumption of the ANOVA model. As seen by the QQ plot, the data follows this normal distribution which holds up that assumption about the ANOVA model. The next graph is a scale location plot, which is used to test the ANOVA assumption of having an equal variance among data values. As seen by this graph, all of the data points are random from one another, which holds the ANOVA assumpion of equal variance. Lastly, the residuals vs leverage graph shows the effect of outliers on the overall data and seeing if they have any effect on the modeling. There are a few outliers in the data that have a big effect on the model and removing them would change up the model in a decently big way. However the majority of the data lies within the Cook's distance and is not subject to being an outlier. From all of this data, it can be seen that the one-way ANOVA model created holds up and that all of the assumptions about it are true. This further validates the results to the first question in that a stronger economy through GDP per capita leads to a higher amount of vaccinations.
+
+```{r data16, echo=FALSE}
+
+# Sensitivity Analysis for the two-way ANOVA model for COVID-19 cases when compared to GDP and proportion of the population that is vaccinated
+
+plot(GDP.cases.model)
+
+```
+
+A second sensitivity analysis was also conducted on the model of GDP per capita and proportion of the vaccinated population to the total COVID-19 cases. Like the first sensitivity analysis, this was done in order to prove the assumptions about the ANOVA modeling. This two-way ANOVA model was chosen over the other model as there were more data points towards COVID-19 cases when compared to total deaths. When looking at the first graph, which is the residuals vs the fitted values, it can be seen that GDP per capita and proportion of the population vaccinated follow a linear trend when compared to total COVID-19 cases. There are some slight outliers in the data, but for the most part this data follows a linear relationship. Next when analyzing the QQ plot, it seems that the data largely follows a normal distribution yet some of the values become outliers the farther that they deviate. In this it can be said that the outlier data in regards to total cases does not follow a normal distribution. Next, when analyzing the scale location plot, it can be seen that the values are not totally random and are clumped up at certain parts. This would mean that the data does not fully have an equal variance and that this assumption about the ANOVA model can not hold up. There are areas where the data has an equal variance in regards to one another, but for the most part there are a ton of values that do not have an equal variance. When looking at the residuals vs leverage graph, there are a few outliers in the data, yet none of them are too influential in affecting the model as a whole. Keeping or removing these data values should not change the result of the modeling too much. However, when analyzing the ANOVA model as a whole, it can be seen that the assumptions do not hold up in some regards, leading to the acknowledgement that the model is flawed in some regard. Moving forward, the ANOVA model would have to be changed, in order to account for obtaining equal variance between the data points and then further analyzing the trends that account from that.
+
+### Conclusion
+
+From the analysis that has been undertaken, it can be seen that there is a real trend between the strength of a country's economy and the vaccination status of their population, as shown by the one way ANOVA model that was created. This supports the first question of interest in the data report, in that countries with a stronger economy, or higher GDP per capita, thus have more resources to supply vaccines to their population. Further trends can then be analyzed, with additional data about a country's healthcare system being taken into account to see if there are further trends towards a country's vaccination status. This can be useful in the discipline of health policy, as it can show which areas of the world need medical resources and the real time effects of the lack of those resources. A big caveat in this model is that it only accounts for GDP per capita, showing a need for additional data points about a country's economy to be considered. As GDP per capita may not be the most extensive measure of a country's economy, it would be good to explore other variables and possibly cross link it to GDP, as that may provide a more in-depth look at how a country's economy affects the availability of the COVID-19 vaccine.
+
+However, the second of question of interest did not have enough support from the ANOVA model to make any meaningful conclusion from the data. From the two way ANOVA models that were created, it can be seen that GDP per capita was not a good indicator of how many COVID-19 cases and deaths a country had, even when cross checked with the proportion of the population that was vaccinated against COVID-19. This can be explained in that many poorer countries, or countries with a lower GDP per capita, simply lack the resources to catalogue every single instance of a case and death from COVID-19. This leads to inaccurate data, where countries with a higher GDP per capita thus having more COVID-19 cases and deaths. Going forward, additional data should be accounted for, including the overall quality of the health care systems in those lower GDP countries along with if they have the resources required to collect adequate data sampling. This, I believe, was the biggest caveat in this statistical approach. These caveats could be rectified if there were simply more data on avaiable on COVID-19 cases and deaths in these countries.
+
+
+### Acknowledgements
+-Professor Chen for providing the code during lectures and for providing the Github repository.
+
+-Our World in Data, for providing the in-depth data set on COVID-19 vaccinations and GDP per capita
+
+-The World Health Organization, for providing the in-depth data set on COVID-19 cases and deaths.
+
+-My group, group 7, for helping me create my report and providing help when necessary
+
+-Stack Overflow for providing help in coding the graphs and summarizing the data.
